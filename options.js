@@ -9,6 +9,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnResetDefaults = document.getElementById('btnResetDefaults');
   const saveIndicator = document.getElementById('saveIndicator');
 
+  // ---- Merge Reports Link ----
+  const btnMerge = document.getElementById('btnMerge');
+  if (btnMerge) {
+    btnMerge.addEventListener('click', () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL('merge.html') });
+    });
+  }
+
   let categories = [];
   let saveTimeout = null;
 

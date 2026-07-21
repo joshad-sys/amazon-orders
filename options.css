@@ -387,3 +387,36 @@ h1 {
     padding: 0 16px;
   }
 }
+
+.options-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  margin-top: 24px;
+  border-top: 1px solid #E5E7EB;
+  font-size: 11px;
+  color: #9CA3AF;
+}
+
+.footer-link {
+  font-size: 11px;
+  color: #6B7280;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s;
+  border-bottom: 1px dotted #9CA3AF;
+}
+
+.footer-link:hover {
+  color: #FF9900;
+  border-color: #FF9900;
+}
+
+.version-label {
+  font-family: 'SF Mono', 'Consolas', monospace;
+  font-size: 10px;
+  color: #9CA3AF;
+  opacity: 0.7;
+}
