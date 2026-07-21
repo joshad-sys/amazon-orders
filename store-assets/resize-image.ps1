@@ -1,14 +1,14 @@
 <#
 .SYNOPSIS
-    Crop-to-fit resize for AI-generated images (which are always 1024x1024).
-    Maintains aspect ratio by scaling to cover the target dimensions, then
-    cropping from center. No stretching or distortion.
+    Fit-within resize for AI-generated images (which are always 1024x1024).
+    Maintains aspect ratio by scaling to fit WITHIN the target dimensions,
+    centering on a solid background. Nothing gets cropped.
 
 .PARAMETER Source
     Path to the source image file.
 
 .PARAMETER Dest
-    Path for the output image. Defaults to source filename with _resized suffix.
+    Path for the output image. Defaults to source filename with _WxH suffix.
 
 .PARAMETER Width
     Target width in pixels.
@@ -70,20 +70,21 @@ $graphics.CompositingQuality = [System.Drawing.Drawing2D.CompositingQuality]::Hi
 $brush = New-Object System.Drawing.SolidBrush([System.Drawing.ColorTranslator]::FromHtml($BgColor))
 $graphics.FillRectangle($brush, 0, 0, $Width, $Height)
 
-# Scale to COVER target dimensions (maintain aspect ratio, crop excess)
+# Scale to FIT WITHIN target (maintain aspect ratio, pad with background)
 $srcAspect = $src.Width / $src.Height
 $dstAspect = $Width / $Height
 
 if ($srcAspect -gt $dstAspect) {
-    # Source is wider — fit by height, crop sides
-    $scaledH = $Height
-    $scaledW = [int]($Height * $srcAspect)
-} else {
-    # Source is taller — fit by width, crop top/bottom
+    # Source is wider — constrain by width
     $scaledW = $Width
     $scaledH = [int]($Width / $srcAspect)
+} else {
+    # Source is taller — constrain by height
+    $scaledH = $Height
+    $scaledW = [int]($Height * $srcAspect)
 }
 
+# Center on canvas
 $x = [int](($Width - $scaledW) / 2)
 $y = [int](($Height - $scaledH) / 2)
 
