@@ -6,6 +6,10 @@
 (function () {
   'use strict';
 
+  const _version = chrome.runtime.getManifest().version;
+  const _versionLabel = document.getElementById('versionLabel');
+  if (_versionLabel) _versionLabel.textContent = 'v' + _version;
+
   // ---- State ----
   let dataA = null; // { rows: [...], fileName, label, color }
   let dataB = null;
@@ -237,7 +241,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `amazon_orders_merged_${dateStamp()}.csv`;
+    a.download = `amazon_orders_merged_${dateStamp()}_v${_version}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -277,7 +281,7 @@
       month: 'long',
       day: 'numeric',
     });
-    doc.text(`Generated on ${dateStr}  •  ${lA} + ${lB}`, 14, 22);
+    doc.text(`Generated on ${dateStr}  •  ${lA} + ${lB}  •  v${_version}`, 14, 22);
 
     // ---- Build table data ----
     const hasCategory = merged.some((r) => r['Category']);
@@ -500,7 +504,7 @@
     const url = URL.createObjectURL(pdfBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `amazon_orders_merged_${dateStamp()}.pdf`;
+    a.download = `amazon_orders_merged_${dateStamp()}_v${_version}.pdf`;
     a.click();
     URL.revokeObjectURL(url);
   }

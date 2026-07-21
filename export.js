@@ -4,6 +4,8 @@
 // ============================================
 
 const ExportEngine = {
+  _version: chrome.runtime.getManifest().version,
+
   // ---- CSV Export ----
   generateCSV(orders, opts = {}) {
     const { includeImages = false, imageMode = 'url', categorizeItems = false } = opts;
@@ -81,7 +83,7 @@ const ExportEngine = {
     const csvContent = this.generateCSV(orders, opts);
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const filename = `amazon_orders_${this._dateStamp()}.csv`;
+    const filename = `amazon_orders_${this._dateStamp()}_v${this._version}.csv`;
 
     chrome.downloads.download(
       {
@@ -143,7 +145,7 @@ const ExportEngine = {
       month: 'long',
       day: 'numeric',
     });
-    doc.text(`Generated on ${dateStr}  •  ${orders.length} orders`, 14, 22);
+    doc.text(`Generated on ${dateStr}  •  ${orders.length} orders  •  v${this._version}`, 14, 22);
 
     const showCategories = opts.categorizeItems || false;
 
@@ -467,7 +469,7 @@ const ExportEngine = {
 
   downloadPDF(orders, opts = {}) {
     const doc = this.generatePDF(orders, opts);
-    const filename = `amazon_orders_${this._dateStamp()}.pdf`;
+    const filename = `amazon_orders_${this._dateStamp()}_v${this._version}.pdf`;
 
     const pdfBlob = doc.output('blob');
     const url = URL.createObjectURL(pdfBlob);

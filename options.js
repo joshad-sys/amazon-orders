@@ -4,6 +4,10 @@
 // ============================================
 
 document.addEventListener('DOMContentLoaded', async () => {
+  // ---- Version Label ----
+  const versionLabel = document.getElementById('versionLabel');
+  if (versionLabel) versionLabel.textContent = 'v' + chrome.runtime.getManifest().version;
+
   const categoryList = document.getElementById('categoryList');
   const btnAddCategory = document.getElementById('btnAddCategory');
   const btnResetDefaults = document.getElementById('btnResetDefaults');

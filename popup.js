@@ -3,6 +3,10 @@
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  // ---- Version Label ----
+  const versionLabel = document.getElementById('versionLabel');
+  if (versionLabel) versionLabel.textContent = 'v' + chrome.runtime.getManifest().version;
+
   // ---- Element References ----
   const statusBanner = document.getElementById('statusBanner');
   const statusText = document.getElementById('statusText');
