@@ -4,7 +4,10 @@
 // ============================================
 
 const ExportEngine = {
-  _version: chrome.runtime.getManifest().version,
+  get _version() {
+    try { return chrome.runtime.getManifest().version; }
+    catch (e) { return 'unknown'; }
+  },
 
   // ---- CSV Export ----
   generateCSV(orders, opts = {}) {

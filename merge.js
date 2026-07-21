@@ -6,9 +6,12 @@
 (function () {
   'use strict';
 
-  const _version = chrome.runtime.getManifest().version;
-  const _versionLabel = document.getElementById('versionLabel');
-  if (_versionLabel) _versionLabel.textContent = 'v' + _version;
+  let _version = 'unknown';
+  try {
+    _version = chrome.runtime.getManifest().version;
+    const _versionLabel = document.getElementById('versionLabel');
+    if (_versionLabel) _versionLabel.textContent = 'v' + _version;
+  } catch (e) { /* ignore */ }
 
   // ---- State ----
   let dataA = null; // { rows: [...], fileName, label, color }

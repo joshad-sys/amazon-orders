@@ -4,8 +4,10 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   // ---- Version Label ----
-  const versionLabel = document.getElementById('versionLabel');
-  if (versionLabel) versionLabel.textContent = 'v' + chrome.runtime.getManifest().version;
+  try {
+    const versionLabel = document.getElementById('versionLabel');
+    if (versionLabel) versionLabel.textContent = 'v' + chrome.runtime.getManifest().version;
+  } catch (e) { /* ignore */ }
 
   // ---- Element References ----
   const statusBanner = document.getElementById('statusBanner');

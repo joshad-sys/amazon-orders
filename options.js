@@ -5,8 +5,10 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
   // ---- Version Label ----
-  const versionLabel = document.getElementById('versionLabel');
-  if (versionLabel) versionLabel.textContent = 'v' + chrome.runtime.getManifest().version;
+  try {
+    const versionLabel = document.getElementById('versionLabel');
+    if (versionLabel) versionLabel.textContent = 'v' + chrome.runtime.getManifest().version;
+  } catch (e) { /* ignore */ }
 
   const categoryList = document.getElementById('categoryList');
   const btnAddCategory = document.getElementById('btnAddCategory');
