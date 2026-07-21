@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Merge Amazon Order Reports</title>
+  <link rel="stylesheet" href="merge.css">
+</head>
+<body>
+  <div class="merge-container">
+    <header class="header">
+      <div class="header-content">
+        <div class="header-left">
+          <div class="logo">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF9900" stroke-width="2.5">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <path d="M16 10a4 4 0 0 1-8 0"/>
+            </svg>
+          </div>
+          <div>
+            <h1>Merge Order Reports</h1>
+            <p class="subtitle">Combine exports from multiple Amazon accounts into one report</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <!-- Drop Zones -->
+      <div class="drop-zones">
+        <div class="drop-zone-card">
+          <h3 class="card-title">Account A</h3>
+          <div id="dropZoneA" class="drop-zone" data-account="A">
+            <svg class="drop-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <p class="drop-text">Drop CSV file here</p>
+            <p class="drop-subtext">or click to browse</p>
+            <input type="file" id="fileInputA" accept=".csv" class="file-input">
+          </div>
+          <div id="fileInfoA" class="file-info hidden">
+            <div class="file-badge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              <span id="fileNameA" class="file-name"></span>
+              <button id="removeA" class="btn-remove" title="Remove file">&times;</button>
+            </div>
+            <div class="file-stats">
+              <span id="orderCountA" class="stat"></span>
+            </div>
+          </div>
+          <label class="label-input">
+            <span>Account Label</span>
+            <input type="text" id="labelA" class="text-input" placeholder="e.g., My Account" value="Account A">
+          </label>
+          <label class="color-input">
+            <span>Bar Color</span>
+            <input type="color" id="colorA" class="color-picker" value="#FF9900">
+          </label>
+        </div>
+
+        <div class="merge-arrow">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </div>
+
+        <div class="drop-zone-card">
+          <h3 class="card-title">Account B</h3>
+          <div id="dropZoneB" class="drop-zone" data-account="B">
+            <svg class="drop-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <p class="drop-text">Drop CSV file here</p>
+            <p class="drop-subtext">or click to browse</p>
+            <input type="file" id="fileInputB" accept=".csv" class="file-input">
+          </div>
+          <div id="fileInfoB" class="file-info hidden">
+            <div class="file-badge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              <span id="fileNameB" class="file-name"></span>
+              <button id="removeB" class="btn-remove" title="Remove file">&times;</button>
+            </div>
+            <div class="file-stats">
+              <span id="orderCountB" class="stat"></span>
+            </div>
+          </div>
+          <label class="label-input">
+            <span>Account Label</span>
+            <input type="text" id="labelB" class="text-input" placeholder="e.g., Spouse Account" value="Account B">
+          </label>
+          <label class="color-input">
+            <span>Bar Color</span>
+            <input type="color" id="colorB" class="color-picker" value="#4A90D9">
+          </label>
+        </div>
+      </div>
+
+      <!-- Duplicate Warning -->
+      <div id="duplicateWarning" class="warning hidden">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span id="duplicateText"></span>
+      </div>
+
+      <!-- Merge Preview -->
+      <div id="previewSection" class="preview-section hidden">
+        <h2 class="section-title">Merge Preview</h2>
+        <div class="preview-stats">
+          <div class="stat-card">
+            <span class="stat-value" id="totalOrders">0</span>
+            <span class="stat-label">Total Orders</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="totalItems">0</span>
+            <span class="stat-label">Total Items</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="totalSpend">$0</span>
+            <span class="stat-label">Combined Spend</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-value" id="yearRange">-</span>
+            <span class="stat-label">Year Range</span>
+          </div>
+        </div>
+
+        <div class="export-buttons">
+          <button id="btnMergeCSV" class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download Merged CSV
+          </button>
+          <button id="btnMergePDF" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            Download Merged PDF
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span>Amazon Order History Exporter</span>
+      <span id="versionLabel" class="version-label"></span>
+    </footer>
+  </div>
+
+  <script src="lib/papaparse.min.js"></script>
+  <script src="lib/jspdf.umd.min.js"></script>
+  <script src="lib/jspdf.plugin.autotable.min.js"></script>
+  <script src="categories.js"></script>
+  <script src="charts.js"></script>
+  <script src="export.js"></script>
+  <script src="merge.js"></script>
+</body>
+</html>

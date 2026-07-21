@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "Amazon Order History Exporter",
+  "version": "1.5.0",
+  "description": "Export your Amazon order history to beautifully formatted CSV and PDF files. Automatically walks through all paginated pages.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "downloads",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.amazon.com/*",
+    "https://images-na.ssl-images-amazon.com/*",
+    "https://m.media-amazon.com/*",
+    "https://images-amazon.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.amazon.com/gp/your-account/order-history*",
+        "https://www.amazon.com/your-orders/*",
+        "https://www.amazon.com/gp/css/order-history*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
