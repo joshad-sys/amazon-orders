@@ -59,12 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let imageSize = 'medium'; // 'small', 'medium', 'large'
   let categorizeItems = false;
 
-  // ---- Display version ----
-  const manifest = chrome.runtime.getManifest();
-  const versionLabel = document.getElementById('versionLabel');
-  if (versionLabel) {
-    versionLabel.textContent = 'v' + manifest.version;
-  }
 
   // ---- Initialize ----
   init();
