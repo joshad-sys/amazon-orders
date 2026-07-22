@@ -43,12 +43,6 @@
   const yearRange = document.getElementById('yearRange');
   const btnMergeCSV = document.getElementById('btnMergeCSV');
   const btnMergePDF = document.getElementById('btnMergePDF');
-  const versionLabel = document.getElementById('versionLabel');
-
-  // ---- Version display ----
-  if (versionLabel && chrome?.runtime?.getManifest) {
-    versionLabel.textContent = 'v' + chrome.runtime.getManifest().version;
-  }
 
   // ---- Drag & Drop Setup ----
   [
@@ -502,6 +496,32 @@
       doc.addImage(barImg, 'PNG', 14, 26, chartW, chartH);
     }
 
+    // ---- Category Doughnut Chart ----
+    if (hasCategory) {
+      const categoryStats = buildMergedCategoryStats(merged);
+      if (categoryStats.length > 0) {
+        const pieImg = ChartRenderer.renderPieChart(categoryStats, {
+          width: 800,
+          height: 500,
+          title: 'Combined Spending by Category',
+        });
+
+        doc.addPage();
+        doc.setFillColor(26, 26, 46);
+        doc.rect(0, 0, pageWidth, 18, 'F');
+        doc.setFillColor(255, 153, 0);
+        doc.rect(0, 18, pageWidth, 1, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(255, 255, 255);
+        doc.text('Category Breakdown — Combined', 14, 12);
+
+        const pieW = pageWidth - 28;
+        const pieH = pieW * 0.625;
+        doc.addImage(pieImg, 'PNG', 14, 24, pieW, pieH);
+      }
+    }
+
     // ---- Save ----
     const pdfBlob = doc.output('blob');
     const url = URL.createObjectURL(pdfBlob);
@@ -582,5 +602,48 @@
           b: parseInt(result[3], 16),
         }
       : { r: 255, g: 153, b: 0 };
+  }
+
+  // ---- Build category spending stats from merged rows (for pie chart) ----
+  function buildMergedCategoryStats(mergedRows) {
+    const catMap = {}; // category name -> { count, totalSpend }
+
+    for (const row of mergedRows) {
+      const cat = row['Category'] || 'Other';
+      if (!catMap[cat]) catMap[cat] = { count: 0, totalSpend: 0 };
+
+      const qty = parseInt(row['Qty'] || '1', 10) || 1;
+      catMap[cat].count += qty;
+
+      const price = parseFloat((row['Item Price'] || '').replace(/[~$,]/g, ''));
+      if (!isNaN(price)) catMap[cat].totalSpend += price * qty;
+    }
+
+    // Build color map from CategoryEngine defaults
+    const defaultColorMap = {};
+    if (typeof CategoryEngine !== 'undefined' && CategoryEngine.DEFAULT_CATEGORIES) {
+      for (const c of CategoryEngine.DEFAULT_CATEGORIES) {
+        defaultColorMap[c.name] = c.color;
+      }
+    }
+
+    // Fallback colors for categories not in defaults
+    const fallbackColors = [
+      '#4A90D9', '#50C878', '#F5A623', '#E74C3C', '#9B59B6',
+      '#E67E22', '#1ABC9C', '#3498DB', '#F39C12', '#E91E63',
+      '#795548', '#607D8B', '#FF5722', '#27AE60',
+    ];
+    let colorIdx = 0;
+
+    const stats = Object.entries(catMap)
+      .map(([name, data]) => ({
+        name,
+        color: defaultColorMap[name] || fallbackColors[colorIdx++ % fallbackColors.length],
+        count: data.count,
+        totalSpend: data.totalSpend,
+      }))
+      .sort((a, b) => b.totalSpend - a.totalSpend);
+
+    return stats;
   }
 })();
