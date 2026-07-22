@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Amazon Order History Exporter",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "description": "Export your Amazon order history to beautifully formatted CSV and PDF files. Automatically walks through all paginated pages.",
   "permissions": [
     "activeTab",
