@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnSizeMedium = document.getElementById('btnSizeMedium');
   const btnSizeLarge = document.getElementById('btnSizeLarge');
   const toggleCategories = document.getElementById('toggleCategories');
+  const toggleFastMode = document.getElementById('toggleFastMode');
   const btnSettings = document.getElementById('btnSettings');
 
   const progressBarFill = document.getElementById('progressBarFill');
@@ -58,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let imageMode = 'embedded'; // 'url' or 'embedded'
   let imageSize = 'medium'; // 'small', 'medium', 'large'
   let categorizeItems = false;
+  let fastMode = false;
 
 
   // ---- Initialize ----
@@ -158,6 +160,11 @@ document.addEventListener('DOMContentLoaded', () => {
     categorizeItems = toggleCategories.checked;
   });
 
+  // ---- Fast Mode Toggle ----
+  toggleFastMode.addEventListener('change', () => {
+    fastMode = toggleFastMode.checked;
+  });
+
   // ---- Settings Button ----
   btnSettings.addEventListener('click', async () => {
     try {
@@ -195,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
       imageMode: imageMode,
       imageSize: imageSize,
       categorizeItems: categorizeItems,
+      fastMode: fastMode,
     });
 
     showProgressUI({

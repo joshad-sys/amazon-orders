@@ -34,6 +34,7 @@ const DEFAULT_STATE = {
   imageMode: 'embedded',
   imageSize: 'medium',
   categorizeItems: false,
+  fastMode: false,
 };
 
 // Initialize state on install
@@ -117,6 +118,7 @@ async function handleStartScraping(message) {
     imageMode: message.imageMode || 'embedded',
     imageSize: message.imageSize || 'medium',
     categorizeItems: message.categorizeItems || false,
+    fastMode: message.fastMode || false,
   };
   await chrome.storage.local.set(state);
 

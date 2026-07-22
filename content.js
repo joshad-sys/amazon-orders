@@ -12,12 +12,44 @@
 
   console.log('[Content] Amazon Order Exporter content script loaded.');
 
-  const NAVIGATION_DELAY_MS = 2000; // Delay before navigating to next page
-  const PAGE_READY_POLL_MS = 500;   // How often to check if page content has loaded
-  const PAGE_READY_TIMEOUT_MS = 15000; // Max time to wait for page content
-  const SCRAPE_RETRY_DELAY_MS = 3000;  // Wait before retrying if no orders found
-  const MAX_SCRAPE_RETRIES = 2;        // Max retries if page seems empty
+  // ---- Timing constants (adjusted by Fast Mode) ----
+  // Defaults are "robust" mode; fast mode uses aggressive values
+  let NAVIGATION_DELAY_MS = 2000;   // Delay before navigating to next page
+  let PAGE_READY_POLL_MS = 500;     // How often to check if page content has loaded
+  let PAGE_READY_TIMEOUT_MS = 15000; // Max time to wait for page content
+  let SCRAPE_RETRY_DELAY_MS = 3000; // Wait before retrying if no orders found
+  let MAX_SCRAPE_RETRIES = 2;       // Max retries if page seems empty
+  let PAGE_READY_GRACE_MS = 500;    // Grace period after content detected
+
+  // Fast Mode values
+  const FAST_NAVIGATION_DELAY_MS = 300;
+  const FAST_PAGE_READY_POLL_MS = 200;
+  const FAST_PAGE_READY_TIMEOUT_MS = 8000;
+  const FAST_SCRAPE_RETRY_DELAY_MS = 500;
+  const FAST_MAX_SCRAPE_RETRIES = 0;
+  const FAST_PAGE_READY_GRACE_MS = 0;
+
   let isCurrentlyScraping = false;
+
+  // Load fast mode setting from storage
+  function applyTimingMode(fastMode) {
+    if (fastMode) {
+      NAVIGATION_DELAY_MS = FAST_NAVIGATION_DELAY_MS;
+      PAGE_READY_POLL_MS = FAST_PAGE_READY_POLL_MS;
+      PAGE_READY_TIMEOUT_MS = FAST_PAGE_READY_TIMEOUT_MS;
+      SCRAPE_RETRY_DELAY_MS = FAST_SCRAPE_RETRY_DELAY_MS;
+      MAX_SCRAPE_RETRIES = FAST_MAX_SCRAPE_RETRIES;
+      PAGE_READY_GRACE_MS = FAST_PAGE_READY_GRACE_MS;
+      console.log('[Content] ⚡ Fast Mode enabled');
+    } else {
+      console.log('[Content] 🛡️ Robust Mode (default)');
+    }
+  }
+
+  // Apply on load
+  chrome.storage.local.get('fastMode', (result) => {
+    applyTimingMode(result.fastMode === true);
+  });
 
   // ---- Noise words to filter from item names ----
   const ITEM_NAME_BLOCKLIST = [
@@ -111,7 +143,7 @@
 
         if (hasOrders || hasYearDropdown || hasNoOrdersMessage) {
           // Content is loaded — add a small grace period for any remaining async rendering
-          setTimeout(resolve, 500);
+          setTimeout(resolve, PAGE_READY_GRACE_MS);
           return;
         }
 
