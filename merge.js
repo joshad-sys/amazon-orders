@@ -435,7 +435,7 @@
         styles: {
           font: 'helvetica',
           fontSize: 9,
-          cellPadding: 4,
+          cellPadding: 3,
           lineColor: [60, 60, 80],
           lineWidth: 0.2,
         },
@@ -443,16 +443,18 @@
           fillColor: [26, 26, 46],
           textColor: [255, 200, 100],
           fontStyle: 'bold',
+          fontSize: 8,
         },
         columnStyles: {
-          0: { fontStyle: 'bold', cellWidth: 30 },
-          1: { halign: 'right', cellWidth: 30 },
-          2: { halign: 'right', cellWidth: 35 },
-          3: { halign: 'right', cellWidth: 30 },
-          4: { halign: 'right', cellWidth: 35 },
-          5: { halign: 'right', cellWidth: 35, fontStyle: 'bold' },
-          6: { halign: 'right', cellWidth: 40, fontStyle: 'bold' },
+          0: { fontStyle: 'bold', cellWidth: 24 },
+          1: { halign: 'right', cellWidth: 'auto' },
+          2: { halign: 'right', cellWidth: 'auto' },
+          3: { halign: 'right', cellWidth: 'auto' },
+          4: { halign: 'right', cellWidth: 'auto' },
+          5: { halign: 'right', cellWidth: 'auto', fontStyle: 'bold' },
+          6: { halign: 'right', cellWidth: 'auto', fontStyle: 'bold' },
         },
+        margin: { top: 26, bottom: 20, left: 10, right: 10 },
         didParseCell(data) {
           if (data.section === 'body') {
             const isLast = data.row.index === summaryData.length - 1;
